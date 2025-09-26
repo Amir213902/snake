@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas {
+            /* background-color: red; */
+            border: 1px solid #000;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" width="800" height="600"></canvas>
+
+    <script>
+        var canvas = document.getElementById('canvas')
+        var ctx = canvas.getContext('2d')
+
+        canvas.width = 800; //Границы холста
+        canvas.height = 800;
+
+
+
+        let i = 0;
+        let y = 0
+        let snake = [0, 0, 1]
+        let x = 0;
+        let direction = '';
+        let xdelta = x;
+        let ydelta = y;
+        let oldTime = Date.now();
+        
+        function gameLoop() {
+            let now = Date.now()
+            let timeDelta = now - oldTime
+            if (timeDelta >= 1000) {
+                oldTime = now
+                if(x > canvas.width) x = 0
+                if(x < 0) x = canvas.width
+                if(y > canvas.height) y = 0
+                if(y < 0) y = canvas.height
+               
+                clear()
+                x = x + xdelta
+                y = y + ydelta
+                drew()
+            }
+        }
+
+        function drew () {
+            ctx.fillStyle = 'red'
+            ctx.fillRect(x, y, 80, 80);
+        }
+
+        function clear() {
+            ctx.fillStyle = 'white'
+            ctx.fillRect(0, 0, canvas.width, canvas.height)
+        }
+
+        document.body.addEventListener('keydown', function (event) {
+            // console.log( == 'w')/
+            switch (event.key) {
+                case 'd':
+                    if (xdelta == -80 && ydelta == 0) {
+                        return
+                    }
+                    xdelta = +80;
+                    ydelta = 0;
+                    break;
+                case 'a':
+                    if (xdelta == +80 && ydelta == 0) {
+                        return
+                    }
+                    xdelta = -80;
+                    ydelta = 0;
+                    break;
+                case 'w':
+                    if (xdelta == 0 && ydelta == 80) {
+                        return
+                    }
+                    xdelta = 0;
+                    ydelta = -80;
+                    break;
+                case 's':
+                    if (xdelta == 0 && ydelta == -80) {
+                        return
+                    }
+                    xdelta = 0;
+                    ydelta = 80;
+                    break;
+
+                default:
+                    break;
+            }
+        });
+        setInterval(gameLoop, 0)
+
+
+
+    </script>
+</body>
+
+</html>
