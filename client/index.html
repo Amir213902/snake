@@ -15,14 +15,14 @@
 </head>
 
 <body>
-    <canvas id="canvas" width="800" height="600"></canvas>
+    <canvas id="canvas" width="800" height="680"></canvas>
 
     <script>
         var canvas = document.getElementById('canvas')
         var ctx = canvas.getContext('2d')
 
-        canvas.width = 800; //Границы холста
-        canvas.height = 800;
+        canvas.width = 880; //Границы холста
+        canvas.height = 880;
 
 
 
@@ -38,24 +38,34 @@
         function gameLoop() {
             let now = Date.now()
             let timeDelta = now - oldTime
-            if (timeDelta >= 1000) {
-                oldTime = now
-                if(x > canvas.width) x = 0
-                if(x < 0) x = canvas.width
-                if(y > canvas.height) y = 0
-                if(y < 0) y = canvas.height
-               
+            if (timeDelta >= 600) {
                 clear()
+                oldTime = now
                 x = x + xdelta
                 y = y + ydelta
-                drew()
+
+                // Поведение при сталкновении границ
+                if(x >= canvas.width) x = 0
+                if(x < 0) x = canvas.width - 80
+                if(y < 0) y = canvas.height - 80
+                if(y > canvas.height - 80) y = 0
+               
+                // if(!(x == 800 && xdelta == 80)) {
+                //     console.log(!(x >= canvas.width && xdelta == 80))
+                   
+                // }
+
+                console.log(y);
+                drew(x, y, 'blue')
             }
         }
 
-        function drew () {
-            ctx.fillStyle = 'red'
+        function drew (x, y, color) {
+            ctx.fillStyle = color
             ctx.fillRect(x, y, 80, 80);
         }
+        // clear()
+        // drew(800, 0, 'red')
 
         function clear() {
             ctx.fillStyle = 'white'
