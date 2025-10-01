@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        canvas {
+            /* background-color: red; */
+            border: 1px solid #000;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Главный пк</h1>
+
+    <canvas id="canvas" width="800" height="680"></canvas>
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"
+        integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+"
+        crossorigin="anonymous"></script>
+    <script>
+        let i = 0;
+        let y = 0
+        let snake = [0, 0, 1]
+        let x = 0;
+        let direction = '';
+        let xdelta = x;
+        let ydelta = y;
+        let oldTime = Date.now();
+
+        const socket = io();
+        // socket.emit('data', 'hehe')
+        // socket.connect();
+        socket.on('data', (msg) => {
+            x = msg.x
+            y = msg.y
+            console.log(msg)
+        });
+
+
+
+
+        var canvas = document.getElementById('canvas')
+        var ctx = canvas.getContext('2d')
+
+        canvas.width = 880; //Границы холста
+        canvas.height = 880;
+
+
+
+        
+
+        function gameLoop() {
+            let now = Date.now()
+            let timeDelta = now - oldTime
+            if (timeDelta >= 300) {
+                clear()
+                oldTime = now
+
+                drew(x, y, 'blue')
+            }
+        }
+
+        function drew(x, y, color) {
+            ctx.fillStyle = color
+            ctx.fillRect(x, y, 80, 80);
+        }
+        // clear()
+        // drew(800, 0, 'red')
+
+        function clear() {
+            ctx.fillStyle = 'white'
+            ctx.fillRect(0, 0, canvas.width, canvas.height)
+        }
+
+        document.body.addEventListener('keydown', function (event) {
+            // console.log( == 'w')/
+            switch (event.key) {
+                case 'd':
+                    socket.emit('data', 'd')
+                    break;
+                case 'a':
+                    socket.emit('data', 'a')
+                    break;
+                case 'w':
+                    socket.emit('data', 'w')
+                    break;
+                case 's':
+                    socket.emit('data', 's')
+                    break;
+
+                default:
+                    break;
+            }
+        });
+        setInterval(gameLoop, 0)
+
+
+
+    </script>
+</body>
+
+</html>
